@@ -7,7 +7,8 @@ export const authApi = base.injectEndpoints({
       query: (params) => ({
         url: 'login',
         method: 'POST',
-        body: params
+        body: params,
+        responseHandler: (response) => response.text()
       })
     })
   })

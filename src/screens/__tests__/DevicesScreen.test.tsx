@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-describe("<Devices />", () => {
+describe.skip("<Devices />", () => {
 	it("should show lables and circles when there are > 0 devices", () => {
 		// mock return a response with 2 devices from query spy
 		const { container } = render(<div></div>);

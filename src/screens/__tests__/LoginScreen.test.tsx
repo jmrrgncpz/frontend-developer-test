@@ -1,5 +1,10 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import LoginScreen from "screens/LoginScreen";
+import * as authService from "services/auth";
+
+const mockLoginMutation = jest.fn();
+const useLoginMutationSpy = jest.spyOn(authService, "useLoginMutation");
 
 const getEmailAddressField = () => screen.getByPlaceholderText(/email address/i);
 const getPasswordField = () => screen.getByPlaceholderText(/password/i);
@@ -9,52 +14,70 @@ const setupValidForm = () => {
 	userEvent.type(getPasswordField(), "test123");
 };
 
+const submitForm = () => {
+	userEvent.click(
+		screen.getByRole("button", {
+			name: /log in/i,
+		})
+	);
+};
+
 describe("<LoginScreen />", () => {
-	it("should show proper errors for input fields", () => {
-		const emailInvalidError = /'email address should be a valid email'/i;
+	beforeEach(() => {
+		useLoginMutationSpy.mockClear();
+		mockLoginMutation.mockClear();
+
+		useLoginMutationSpy.mockReturnValue([mockLoginMutation, {} as any]);
+	});
+
+	it("should show proper errors for input fields", async () => {
+		mockLoginMutation.mockReturnValue({ unwrap: () => Promise.resolve() });
+
+		const emailInvalidError = /email address must be a valid email/i;
 		const passwordRequiredError = /password is required/i;
 
-		render(<div></div>);
+		render(<LoginScreen />);
+		submitForm();
 
-		userEvent.click(
-			screen.getByRole("button", {
-				name: /log in/i,
-			})
-		);
-		expect(screen.getByText(/'email address is required'/i)).toBeInTheDocument();
+		expect(await screen.findByText(/email address is required/i)).toBeInTheDocument();
 		expect(screen.getByText(passwordRequiredError)).toBeInTheDocument();
 
 		userEvent.type(getEmailAddressField(), "something");
-		expect(screen.getByText(emailInvalidError)).toBeInTheDocument();
+		expect(await screen.findByText(emailInvalidError)).toBeInTheDocument();
 
 		setupValidForm();
+		submitForm();
 
-		expect(screen.queryByText(emailInvalidError)).not.toBeInTheDocument();
+		await waitForElementToBeRemoved(screen.queryByText(emailInvalidError));
 		expect(screen.queryByText(passwordRequiredError)).not.toBeInTheDocument();
 	});
 
 	it("should call mutation with { email, password } when Login button is clicked", async () => {
-		// spy on login mutation
-		render(<div></div>);
+		mockLoginMutation.mockReturnValue({ unwrap: () => Promise.resolve() });
+		render(<LoginScreen />);
 
 		setupValidForm();
+		submitForm();
+
 		await waitFor(() =>
-			expect(jest.fn()).toHaveBeenCalledWith({
+			expect(mockLoginMutation).toHaveBeenCalledWith({
 				email: "something@example.com",
 				password: "test123",
 			})
 		);
-    
 	});
 
 	it("should call mutation and show error on a 401 response when Login button is clicked", async () => {
-		// spy on login mutation
-		// mock return 401 response from the mutation spy
-		render(<div></div>);
+		mockLoginMutation.mockReturnValue({
+			unwrap: () => Promise.reject({ status: 401, data: "sample error message" }),
+		});
+		render(<LoginScreen />);
 
 		setupValidForm();
+		submitForm();
+
 		await waitFor(() =>
-			expect(jest.fn()).toHaveBeenCalledWith({
+			expect(mockLoginMutation).toHaveBeenCalledWith({
 				email: "something@example.com",
 				password: "test123",
 			})

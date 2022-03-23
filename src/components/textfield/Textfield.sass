@@ -1,6 +1,6 @@
 @use 'styles/_variables' as *
 
-.textfield-root
+.textfield-input
   position: relative
   display: flex
   flex-direction: row
@@ -9,9 +9,8 @@
   .textfield-input-adornment
     position: absolute
     left: .5rem
-    color: $dark-gray
 
-  .textfield-input
+  input
     width: 100%
     border-radius: $border-radius
     padding: .75rem
@@ -19,4 +18,3 @@
     background: $light-gray
     border: none
     user-select: none
-  
