@@ -10,6 +10,7 @@ export const notificationApi = base.injectEndpoints({
           'authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: data,
+        method: 'POST',
         responseHandler: (response) => response.text()
       })
     })
