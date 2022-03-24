@@ -1,3 +1,4 @@
+import './LoginScreen.sass';
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import LoginForm from "components/login-form/LoginForm";
 import { IAuthenticateMutationParams } from "models/auth";
@@ -21,7 +22,7 @@ const LoginScreen = () => {
 	};
 
 	return (
-		<div>
+		<div className="login-screen-root">
 			<LoginForm onSubmit={handleFormSubmit} />
 			{loginError && <span className="error-helper">{loginError}</span>}
 		</div>

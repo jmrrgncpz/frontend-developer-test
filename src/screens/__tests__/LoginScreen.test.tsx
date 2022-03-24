@@ -1,6 +1,6 @@
 import { render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import LoginScreen from "screens/LoginScreen";
+import LoginScreen from "screens/login/LoginScreen";
 import * as authService from "services/auth";
 
 const mockLoginMutation = jest.fn();
