@@ -8,7 +8,7 @@ interface IAuthSliceState {
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    token: null
+    token: localStorage.getItem('token') || null
   },
   reducers: {
     setToken(state: IAuthSliceState, action: PayloadAction<string>) {
@@ -18,10 +18,9 @@ export const authSlice = createSlice({
       state.token = token;
     },
     clearToken(state: IAuthSliceState) {
-
       localStorage.removeItem('token');
       state.token = null;
-    }
+    },
   }
 })
 
