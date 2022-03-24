@@ -9,7 +9,7 @@ const renderDevices = (deviceCount: number) => {
 	let angle = 0;
 	const step = (2 * Math.PI) / deviceCount;
 
-	const elements = Array.from(Array(deviceCount)).map((i) => {
+	return Array.from(Array(deviceCount)).map((i) => {
 		const x = Math.round(containerWidth / 2 + radius * Math.cos(angle) - 25);
 		const y = Math.round(containerHeight / 2 + radius * Math.sin(angle) - 25);
 
@@ -17,8 +17,6 @@ const renderDevices = (deviceCount: number) => {
 
 		return <span key={i} className="device" style={{ top: y + "px", left: x + "px" }} />;
 	});
-
-  return elements
 };
 
 const Devices = () => {
@@ -33,9 +31,8 @@ const Devices = () => {
 	return (
 		<div className="devices-root">
 			<p className="label">
-				<span>{deviceCount}</span>
-				<br />
-				devices online
+        {deviceCount} 
+        <br /> devices online
 			</p>
 			<div className="devices-anchor">
 				{

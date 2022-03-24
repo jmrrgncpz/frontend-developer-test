@@ -1,25 +1,28 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import DevicesScreen from "screens/devices/DevicesScreen";
+import * as devicesService from "services/devices";
 
-describe.skip("<DevicesScreen />", () => {
-	it("should show lables and circles when there are > 0 devices", () => {
-		// mock return a response with 2 devices from query spy
-		const { container } = render(<div></div>);
+const useFetchDevicesQuerySpy = jest.spyOn(devicesService, "useFetchDevicesQuery");
 
-		expect(screen.getByText(/2 devices online/i)).toBeInTheDocument();
-		expect(container.querySelectorAll(".device-item").length).toBe(2);
+describe("<DevicesScreen />", () => {
+	beforeEach(() => {
+		useFetchDevicesQuerySpy.mockReturnValue({
+			data: {
+				devices: [{}, {}]
+			},
+			refetch: jest.fn(),
+		});
 	});
 
-	it("show show labels and no circle when there is no device", () => {
-		// mock return a response with 0 devices from query spy
-		const { container } = render(<div></div>);
+	it("should show lables and circles", async () => {
+		const { container } = render(<DevicesScreen />);
 
-		expect(screen.getByText(/0 devices online/i)).toBeInTheDocument();
-		expect(container.querySelectorAll(".device-item").length).toBe(0);
+		expect(await screen.findByText(/2 devices online/i)).toBeInTheDocument();
+		expect(container.querySelectorAll(".device").length).toBe(2);
 	});
 
 	it("should call mutation with { name: string; email: string; repoUrl: string; message: string } when Notify button is clicked", async () => {
-		// spy on notify mutation
 		render(<div></div>);
 
 		userEvent.click(
