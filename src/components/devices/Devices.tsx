@@ -20,25 +20,21 @@ const renderDevices = (deviceCount: number) => {
 };
 
 const Devices = () => {
-	const { data: devicesFetchResult } = useFetchDevicesQuery(undefined, {pollingInterval: 5000});
+	const { data: devicesFetchResult } = useFetchDevicesQuery(undefined, { pollingInterval: 5000 });
 
 	if (!devicesFetchResult) {
 		return null;
 	}
 
-  const deviceCount = devicesFetchResult.devices.length;
+	const deviceCount = devicesFetchResult.devices.length;
 
 	return (
 		<div className="devices-root">
-			<p className="label">
-        {deviceCount} 
-        <br /> devices online
+			<p className="label" data-testid="device-label">
+				<span>{deviceCount}</span>
+				<br /> devices online
 			</p>
-			<div className="devices-anchor">
-				{
-          renderDevices(deviceCount)
-        }
-			</div>
+			<div className="devices-anchor">{renderDevices(deviceCount)}</div>
 		</div>
 	);
 };

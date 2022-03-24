@@ -33,7 +33,7 @@ describe("<DevicesScreen />", () => {
 	it("should show lables and circles", async () => {
 		const { container } = render(<DevicesScreen />);
 
-		expect(await screen.findByText(/2 devices online/i)).toBeInTheDocument();
+		expect(await screen.findByTestId("device-label")).toHaveTextContent(/2 devices online/i);
 		expect(container.querySelectorAll(".device").length).toBe(2);
 	});
 
