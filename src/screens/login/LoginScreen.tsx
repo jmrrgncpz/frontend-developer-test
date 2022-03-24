@@ -22,7 +22,7 @@ const LoginScreen = () => {
 	};
 
 	return (
-		<div className="login-screen-root">
+		<div className="login-screen-root screen">
 			<LoginForm onSubmit={handleFormSubmit} />
 			{loginError && <span className="error-helper">{loginError}</span>}
 		</div>

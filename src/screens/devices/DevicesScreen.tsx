@@ -1,6 +1,6 @@
 const DevicesScreen = () => {
   return (
-    <div className="devices-screen-root"></div>
+    <div className="devices-screen-root screen"></div>
   )
 }
 
