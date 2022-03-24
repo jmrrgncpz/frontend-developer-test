@@ -2,9 +2,9 @@ import "./Devices.sass";
 import { useFetchDevicesQuery } from "services/devices";
 
 const renderDevices = (deviceCount: number) => {
-	const radius = 150;
-	const containerWidth = 300;
-	const containerHeight = 300;
+	const radius = 200;
+	const containerWidth = 400;
+	const containerHeight = 400;
 
 	let angle = 0;
 	const step = (2 * Math.PI) / deviceCount;
