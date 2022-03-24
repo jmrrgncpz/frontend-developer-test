@@ -8,9 +8,10 @@ import Button from "components/button/Button";
 
 type LoginFormProps = {
 	onSubmit: (data: IAuthenticateMutationParams) => void;
+	isLoading: boolean;
 };
 
-const LoginForm = ({ onSubmit }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, isLoading }: LoginFormProps) => {
 	const {
 		handleSubmit,
 		register,
@@ -40,9 +41,12 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
 					inputAdornmentName="new_releases"
 					placeholder="Password"
 					error={errors["password"] && errors["password"].message}
+					type="password"
 				/>
 			</div>
-			<Button type="submit">Log In</Button>
+			<Button type="submit" disabled={isLoading}>
+				{isLoading ? "Logging in" : "Log In"}
+			</Button>
 		</form>
 	);
 };

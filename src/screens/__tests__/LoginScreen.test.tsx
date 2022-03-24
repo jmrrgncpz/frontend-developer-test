@@ -2,6 +2,13 @@ import { render, screen, waitFor, waitForElementToBeRemoved } from "@testing-lib
 import userEvent from "@testing-library/user-event";
 import LoginScreen from "screens/login/LoginScreen";
 import * as authService from "services/auth";
+import { setToken } from "store/reducers/authSlice";
+
+const mockDispatch = jest.fn();
+jest.mock("react-redux", () => ({
+	...jest.requireActual("react-redux"),
+	useDispatch: () => mockDispatch,
+}));
 
 const mockLoginMutation = jest.fn();
 const useLoginMutationSpy = jest.spyOn(authService, "useLoginMutation");
@@ -26,6 +33,7 @@ describe("<LoginScreen />", () => {
 	beforeEach(() => {
 		useLoginMutationSpy.mockClear();
 		mockLoginMutation.mockClear();
+		mockDispatch.mockClear();
 
 		useLoginMutationSpy.mockReturnValue([mockLoginMutation, {} as any]);
 	});
@@ -52,8 +60,8 @@ describe("<LoginScreen />", () => {
 		expect(screen.queryByText(passwordRequiredError)).not.toBeInTheDocument();
 	});
 
-	it("should call mutation with { email, password } when Login button is clicked", async () => {
-		mockLoginMutation.mockReturnValue({ unwrap: () => Promise.resolve() });
+	it("should call mutation with { email, password } and receive token when Login button is clicked", async () => {
+		mockLoginMutation.mockReturnValue({ unwrap: () => Promise.resolve("local") });
 		render(<LoginScreen />);
 
 		setupValidForm();
@@ -65,6 +73,8 @@ describe("<LoginScreen />", () => {
 				password: "test123",
 			})
 		);
+
+		await waitFor(() => expect(mockDispatch).toHaveBeenCalledWith(setToken("local")));
 	});
 
 	it("should call mutation and show error on a 401 response when Login button is clicked", async () => {

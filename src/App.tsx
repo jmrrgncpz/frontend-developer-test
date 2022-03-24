@@ -1,8 +1,10 @@
+import { useSelector } from "react-redux";
 import DevicesScreen from "screens/devices/DevicesScreen";
 import LoginScreen from "screens/login/LoginScreen";
+import { tokenSelector } from "store/reducers/authSlice";
 
 function App() {
-	const token = localStorage.getItem("token");
+	const token = useSelector(tokenSelector);
 	return <div className="App">{token ? <DevicesScreen /> : <LoginScreen />}</div>;
 }
 

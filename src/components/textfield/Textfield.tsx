@@ -1,7 +1,7 @@
 import "./Textfield.sass";
-import { ForwardedRef, forwardRef, HTMLAttributes, ReactNode } from "react";
+import { ForwardedRef, forwardRef, InputHTMLAttributes } from "react";
 
-type TextfieldProps = HTMLAttributes<HTMLInputElement> & {
+type TextfieldProps = InputHTMLAttributes<HTMLInputElement> & {
 	inputAdornmentName: string;
 	error?: string;
 };
