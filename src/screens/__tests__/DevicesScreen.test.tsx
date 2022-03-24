@@ -2,14 +2,23 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import DevicesScreen from "screens/devices/DevicesScreen";
 import * as devicesService from "services/devices";
+import { clearToken } from "store/reducers/authSlice";
+
+const mockDispatch = jest.fn();
+jest.mock("react-redux", () => ({
+	...jest.requireActual("react-redux"),
+	useDispatch: () => mockDispatch,
+}));
 
 const useFetchDevicesQuerySpy = jest.spyOn(devicesService, "useFetchDevicesQuery");
 
 describe("<DevicesScreen />", () => {
 	beforeEach(() => {
+		mockDispatch.mockClear();
+
 		useFetchDevicesQuerySpy.mockReturnValue({
 			data: {
-				devices: [{}, {}]
+				devices: [{}, {}],
 			},
 			refetch: jest.fn(),
 		});
@@ -40,10 +49,10 @@ describe("<DevicesScreen />", () => {
 		);
 	});
 
-	it("should open login screen when Logout is clicked", async () => {
-		render(<div></div>);
+	it("should call dispatch with clearToken action when Logout is clicked", async () => {
+		render(<DevicesScreen />);
 
-		userEvent.click(screen.getByRole("button", { name: /logout/i }));
-		expect(await screen.findByText("Login")).toBeInTheDocument();
+		userEvent.click(screen.getByRole("button", { name: /log out/i }));
+		await waitFor(() => expect(mockDispatch).toHaveBeenCalledWith(clearToken()));
 	});
 });
