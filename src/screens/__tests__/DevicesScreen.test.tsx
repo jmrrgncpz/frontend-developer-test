@@ -2,7 +2,11 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import DevicesScreen from "screens/devices/DevicesScreen";
 import * as devicesService from "services/devices";
+import * as notificationService from "services/notification";
 import { clearToken } from "store/reducers/authSlice";
+
+const mockNotify = jest.fn();
+const useNotifyMutationSpy = jest.spyOn(notificationService, "useNotifyMutation");
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({
@@ -15,7 +19,9 @@ const useFetchDevicesQuerySpy = jest.spyOn(devicesService, "useFetchDevicesQuery
 describe("<DevicesScreen />", () => {
 	beforeEach(() => {
 		mockDispatch.mockClear();
+		mockNotify.mockClear();
 
+		useNotifyMutationSpy.mockReturnValue([mockNotify, {} as any]);
 		useFetchDevicesQuerySpy.mockReturnValue({
 			data: {
 				devices: [{}, {}],
@@ -32,19 +38,20 @@ describe("<DevicesScreen />", () => {
 	});
 
 	it("should call mutation with { name: string; email: string; repoUrl: string; message: string } when Notify button is clicked", async () => {
-		render(<div></div>);
+		render(<DevicesScreen />);
 
 		userEvent.click(
 			screen.getByRole("button", {
 				name: /notify/i,
 			})
 		);
+
 		await waitFor(() =>
-			expect(jest.fn()).toHaveBeenCalledWith({
+			expect(mockNotify).toHaveBeenCalledWith({
 				name: "Jesmer Paz",
 				email: "paz.jesr@gmail.com",
 				repoUrl: "https://github.com/jmrrgncpz/frontend-developer-test",
-				message: "Well, Hi there.",
+				message: "I'm SO done. ;)",
 			})
 		);
 	});
