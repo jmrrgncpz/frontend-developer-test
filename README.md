@@ -1,4 +1,6 @@
 ![image](https://user-images.githubusercontent.com/23011945/159908407-82a3ba14-387a-4581-96b2-2e6e7bcbbeb3.png)
+### Setup
+Run `yarn` to install the packages.
 
 In the project directory, you can run:
 
